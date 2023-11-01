@@ -1,9 +1,13 @@
 <template>
-  <van-button type="primary" @click="showToast('toast')">button</van-button>
-  <VanButton type="success" @click="showNotify('notify')">button</VanButton>
-  <LazyVanButton type="default">lazy button</LazyVanButton>
-  <el-button @click="ElMessage('hello')">button</el-button>
-  <ElButton :icon="ElIconEditPen" type="success">button</ElButton>
-  <LazyElButton type="warning">lazy button</LazyElButton>
-  <div>hi, test pwa</div>
+  <h1>HOST, SHARE, DEPLOY<br>YOUR AI ASSETS.</h1>
 </template>
+
+<style lang="scss" scoped>
+h1 {
+  font-family: 'Sometype Mono';
+  margin-top: 40px;
+  margin-left: 160px;
+  font-size: 40px;
+  line-height: 65px;
+}
+</style>

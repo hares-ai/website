@@ -1,9 +1,11 @@
 <template>
-  <nav class="app-header">
-    <NuxtLink to="/">Header</NuxtLink>
+  <el-header class="app-header">
+    <NuxtLink to="/">
+      <span>hares.ai</span>
+    </NuxtLink>
     <LogoutButton v-if="isLogined"></LogoutButton>
     <NuxtLink to="/login" v-else>Sign In</NuxtLink>
-  </nav>
+  </el-header>
 </template>
 
 <script lang="ts" setup>
@@ -20,7 +22,5 @@ onMounted(() => {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
-  background-color: gray;
 }
 </style>

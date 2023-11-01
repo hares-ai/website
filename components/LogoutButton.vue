@@ -2,7 +2,7 @@
 const hanko = useHanko()
 function logout() {
   hanko!.user.logout()
-  window.location.href = '/'
+  // window.location.href = '/'
 }
 </script>
 

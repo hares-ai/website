@@ -17,7 +17,12 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@vant/nuxt',
     '@element-plus/nuxt',
-    '@nuxtjs/hanko'
+    '@nuxtjs/hanko',
+    ['@nuxtjs/google-fonts', {
+      families: {
+        'Sometype Mono': [400]
+      }
+    }]
   ],
   app: {
     head: {
@@ -117,7 +122,7 @@ export default defineNuxtConfig({
       periodicSyncForUpdates: 3600
     },
     devOptions: {
-      enabled: true,
+      enabled: false,
       suppressWarnings: true,
       navigateFallbackAllowlist: [/^\/$/],
       type: 'module',

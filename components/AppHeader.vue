@@ -10,11 +10,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import { ethers, toUtf8Bytes, sha256 } from 'ethers'
 import { v4 as uuidv4 } from 'uuid'
 const isLogined = ref(false)
 const userAddress = ref('')
+const credential = ref<Credential | null>(null)
 
 const createWallet = (str: string) => {
   const privateKey = sha256(toUtf8Bytes(str))
@@ -26,8 +27,6 @@ const createWallet = (str: string) => {
   }
 }
 
-onMounted(() => {
-})
 
 async function registerUser() {
   const now = new Date()
@@ -56,17 +55,18 @@ async function registerUser() {
   } as PublicKeyCredentialCreationOptions;
 
   try {
-    const credential = await navigator.credentials.create({
+    const _credential = await navigator.credentials.create({
       publicKey: publicKeyCredentialCreationOptions
     }) as PublicKeyCredential;
 
-    if (!credential) {
+    if (!_credential) {
       window.alert('user register failed')
       return
     }
 
-    const address = createWallet(credential.id).address
+    const address = createWallet(_credential.id).address
     userAddress.value = address
+    credential.value = _credential
     localStorage.setItem('user-address', address)
   } catch (e) {
     console.log(e)
@@ -78,19 +78,50 @@ async function UserSignIn() {
     challenge: Uint8Array.from(uuidv4(), (c: any) => c.charCodeAt(0)),
     rpId: process.env.NUXT_PUBLIC_DOMAIN
   } as PublicKeyCredentialRequestOptions
-  const credential = await navigator.credentials.get({
+  const _credential = await navigator.credentials.get({
     publicKey: options
   });
 
-  if (!credential) {
-    registerUser()
+  if (!_credential) {
+    console.log('UserSignIn return');
+    // registerUser()
     return
   }
 
-  const address = createWallet(credential.id).address
+  const address = createWallet(_credential.id).address
   userAddress.value = address
+  credential.value = _credential
   localStorage.setItem('user-address', address)
 }
+
+async function authenticate() {
+  if (!credential) {
+    alert('Please retrieve first')
+    return
+  }
+  const options = {
+    allowCredentials: [{
+      id: (credential as any).rawId,
+      type: (credential as any).type
+    }],
+    challenge: Uint8Array.from(uuidv4(), (c: any) => c.charCodeAt(0)),
+    rpId: process.env.NUXT_PUBLIC_DOMAIN,
+    timeout: 20000,
+    userVerification: "required",
+  } as PublicKeyCredentialRequestOptions
+  const _credential = await navigator.credentials.get({
+    publicKey: options
+  }) as PublicKeyCredential;
+
+  console.log('_credential', _credential)
+  credential.value = _credential
+}
+
+onMounted(() => {
+  (window as any).registerUser = registerUser;
+  (window as any).UserSignIn = UserSignIn;
+  (window as any).authenticate = authenticate;
+})
 </script>
 
 <style lang="scss">

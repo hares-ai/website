@@ -15,7 +15,7 @@
     "@nuxt/bridge": "^0.10.1",
     "@nuxt/devtools": "latest",
     "@nuxtjs/google-fonts": "^3.0.2",
-    "@nuxtjs/hanko": "^0.4.0",
+    "@types/uuid": "^9.0.6",
     "@vant/nuxt": "^1.0.3",
     "@vite-pwa/nuxt": "^0.1.1",
     "element-plus": "^2.4.1",
@@ -27,6 +27,8 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@flowlist/vue-listview": "^3.12.1"
+    "@flowlist/vue-listview": "^3.12.1",
+    "ethers": "^6.8.0",
+    "uuid": "^9.0.1"
   }
 }

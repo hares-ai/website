@@ -17,7 +17,6 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@vant/nuxt',
     '@element-plus/nuxt',
-    '@nuxtjs/hanko',
     ['@nuxtjs/google-fonts', {
       families: {
         'Sometype Mono': [400]
@@ -133,8 +132,5 @@ export default defineNuxtConfig({
   },
   elementPlus: {
 
-  },
-  hanko: {
-    apiURL: process.env.NUXT_PUBLIC_HANKO_API_URL
   }
 })

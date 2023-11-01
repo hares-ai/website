@@ -30,6 +30,7 @@ body {
 
 body {
   margin: 0;
+  font-family: 'Sometype Mono';
 }
 
 #_app,

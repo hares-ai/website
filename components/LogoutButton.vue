@@ -7,7 +7,7 @@ function logout() {
 </script>
 
 <template>
-  <button @click="logout">
+  <el-button @click="logout" plain>
       Log out
-  </button>
+  </el-button>
 </template>

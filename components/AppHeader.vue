@@ -76,7 +76,10 @@ async function registerUser() {
 async function UserSignIn() {
   const options = {
     challenge: Uint8Array.from(uuidv4(), (c: any) => c.charCodeAt(0)),
-    rpId: process.env.NUXT_PUBLIC_DOMAIN
+    rpId: process.env.NUXT_PUBLIC_DOMAIN,
+    allowCredentials: [],
+    timeout: 20000,
+    userVerification: "required",
   } as PublicKeyCredentialRequestOptions
   const _credential = await navigator.credentials.get({
     publicKey: options
@@ -92,17 +95,18 @@ async function UserSignIn() {
   userAddress.value = address
   credential.value = _credential
   localStorage.setItem('user-address', address)
+  console.log('_credential', _credential)
 }
 
 async function authenticate() {
-  if (!credential) {
+  if (!credential.value) {
     alert('Please retrieve first')
     return
   }
   const options = {
     allowCredentials: [{
-      id: (credential as any).rawId,
-      type: (credential as any).type
+      id: (credential.value as any).rawId,
+      type: (credential.value as any).type
     }],
     challenge: Uint8Array.from(uuidv4(), (c: any) => c.charCodeAt(0)),
     rpId: process.env.NUXT_PUBLIC_DOMAIN,

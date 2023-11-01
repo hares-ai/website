@@ -35,9 +35,9 @@ export default defineNuxtConfig({
     registerType: 'autoUpdate',
     registerWebManifestInRouteRules: true,
     manifest: {
-      name: 'Nuxt Vite PWA',
-      short_name: 'NuxtVitePWA',
-      theme_color: '#ffffff',
+      name: 'Hares AI',
+      short_name: 'hares',
+      theme_color: '#000000',
       start_url: '/mobile',
       icons: [
         {
@@ -135,6 +135,6 @@ export default defineNuxtConfig({
 
   },
   hanko: {
-    apiURL: process.env.NUXT_PUBLIC_HANKO_API_URL,
+    apiURL: process.env.NUXT_PUBLIC_HANKO_API_URL
   }
 })

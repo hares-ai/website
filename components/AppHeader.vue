@@ -4,29 +4,31 @@
       <img class="logo" src="~/assets/logo.svg" alt="">
       <span>hares.ai</span>
     </NuxtLink>
-    <LogoutButton v-if="isLogined"></LogoutButton>
-    <el-button plain v-else @click="UserSignIn()">Sign In</el-button>
+    <el-dropdown v-if="userAddress">
+      <span class="el-dropdown-link">
+        <el-avatar :size="36" :src="`https://source.boringavatars.com/beam?name=${userAddress}`" />
+      </span>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <LogoutButton></LogoutButton>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+    <el-button plain v-else @click="signProcess()">Sign In</el-button>
   </el-header>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, reactive } from 'vue'
-import { ethers, toUtf8Bytes, sha256 } from 'ethers'
+import { onMounted, ref } from 'vue'
+import { ethers, utils } from 'ethers'
 import { v4 as uuidv4 } from 'uuid'
-const isLogined = ref(false)
+
 const userAddress = ref('')
 const credential = ref<Credential | null>(null)
 
 const createWallet = (str: string) => {
-  const privateKey = sha256(toUtf8Bytes(str))
-  const wallet = new ethers.Wallet(privateKey)
-
-  return {
-    privateKey: wallet.privateKey,
-    address: wallet.address
-  }
+  return new ethers.Wallet(utils.sha256(utils.toUtf8Bytes(str)))
 }
-
 
 async function registerUser() {
   const now = new Date()
@@ -64,10 +66,13 @@ async function registerUser() {
       return
     }
 
-    const address = createWallet(_credential.id).address
+    const wallet = createWallet(_credential.id)
+    const address = wallet.address
+    const message = await wallet.signMessage('sign-hares.ai#login' + address)
     userAddress.value = address
     credential.value = _credential
-    localStorage.setItem('user-address', address)
+    localStorage.setItem('not-newbie', '1')
+    localStorage.setItem(process.env.NUXT_PUBLIC_USER_TOKEN as string, `${address}:${message}`)
   } catch (e) {
     console.log(e)
   }
@@ -86,45 +91,42 @@ async function UserSignIn() {
   });
 
   if (!_credential) {
-    console.log('UserSignIn return');
-    // registerUser()
     return
   }
 
-  const address = createWallet(_credential.id).address
+  const wallet = createWallet(_credential.id)
+  const address = wallet.address
+  const message = await wallet.signMessage('sign-hares.ai#login' + address)
   userAddress.value = address
   credential.value = _credential
-  localStorage.setItem('user-address', address)
-  console.log('_credential', _credential)
+  localStorage.setItem('not-newbie', '1')
+  localStorage.setItem(process.env.NUXT_PUBLIC_USER_TOKEN as string, `${address}:${message}`)
 }
 
-async function authenticate() {
-  if (!credential.value) {
-    alert('Please retrieve first')
-    return
+const signProcess = () => {
+  if (!!localStorage.getItem('not-newbie')) {
+    UserSignIn()
+  } else {
+    registerUser()
   }
-  const options = {
-    allowCredentials: [{
-      id: (credential.value as any).rawId,
-      type: (credential.value as any).type
-    }],
-    challenge: Uint8Array.from(uuidv4(), (c: any) => c.charCodeAt(0)),
-    rpId: process.env.NUXT_PUBLIC_DOMAIN,
-    timeout: 20000,
-    userVerification: "required",
-  } as PublicKeyCredentialRequestOptions
-  const _credential = await navigator.credentials.get({
-    publicKey: options
-  }) as PublicKeyCredential;
-
-  console.log('_credential', _credential)
-  credential.value = _credential
 }
 
 onMounted(() => {
-  (window as any).registerUser = registerUser;
-  (window as any).UserSignIn = UserSignIn;
-  (window as any).authenticate = authenticate;
+  const sig = localStorage.getItem(process.env.NUXT_PUBLIC_USER_TOKEN as string)
+  if (!sig) {
+    return
+  }
+  const [address, signature] = sig.split(':')
+  if (!address || !signature) {
+    localStorage.removeItem(process.env.NUXT_PUBLIC_USER_TOKEN as string)
+    return
+  }
+  const recoveredAddr = utils.verifyMessage('sign-hares.ai#login' + address, signature)
+  if (recoveredAddr.toLocaleLowerCase() !== address.toLocaleLowerCase()) {
+    localStorage.removeItem(process.env.NUXT_PUBLIC_USER_TOKEN as string)
+    return
+  }
+  userAddress.value = address
 })
 </script>
 

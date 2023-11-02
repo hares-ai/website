@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@flowlist/vue-listview": "^3.12.1",
-    "ethers": "^6.8.0",
+    "ethers": "5.7.2",
     "uuid": "^9.0.1"
   }
 }

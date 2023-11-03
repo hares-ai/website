@@ -3,6 +3,12 @@ export default defineNuxtConfig({
   experimental: {
     payloadExtraction: false,
   },
+  runtimeConfig: {
+    public: {
+      UserToken: 'user-token',
+      Domain: process.env.NUXT_PUBLIC_DOMAIN
+    }
+  },
   nitro: {
     esbuild: {
       options: {

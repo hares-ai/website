@@ -1,6 +1,8 @@
 <script setup lang="ts">
+const runtimeConfig = useRuntimeConfig()
+
 function logout() {
-  localStorage.removeItem(process.env.NUXT_PUBLIC_USER_TOKEN as string)
+  localStorage.removeItem(runtimeConfig.public.UserToken)
   window.location.href = '/'
 }
 </script>

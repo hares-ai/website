@@ -3,12 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm run prisma:deploy && nuxi build",
+    "build": "cross-env DATABASE_URL=\"$DIRECT_DATABASE_URL\" npm run prisma:generate && npm run prisma:deploy && nuxi build",
     "dev": "nuxi dev",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "prisma:generate": "prisma generate",
     "prisma:deploy": "prisma migrate deploy",
     "prisma:reset": "prisma migrate reset",
     "prisma:dev": "prisma migrate dev"
@@ -22,6 +23,7 @@
     "@types/uuid": "^9.0.6",
     "@vant/nuxt": "^1.0.3",
     "@vite-pwa/nuxt": "^0.1.1",
+    "cross-env": "^7.0.3",
     "element-plus": "^2.4.1",
     "nuxi": "^3.9.0",
     "nuxt": "^3.7.4",

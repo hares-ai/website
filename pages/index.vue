@@ -10,10 +10,14 @@
 </template>
 
 <script lang="ts" setup>
-const { data } = await useFetch('/api/hello', {
-  method: 'POST'
+const data = ref<any>(null)
+const total = ref<any>(null)
+onMounted(async () => {
+  data.value = await $fetch('/api/hello', {
+    method: 'POST'
+  })
+  total.value = await $fetch('/api/hello')
 })
-const total = await useFetch('/api/hello')
 </script>
 
 <style lang="scss" scoped>

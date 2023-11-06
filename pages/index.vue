@@ -5,7 +5,16 @@
     <el-button type="primary">Upload a model</el-button>
     <el-button type="primary">Upload ComfyUI workflow</el-button>
   </div>
+  <pre>{{ data }}</pre>
+  <pre>{{ total }}</pre>
 </template>
+
+<script lang="ts" setup>
+const { data } = await useFetch('/api/hello', {
+  method: 'POST'
+})
+const total = await useFetch('/api/hello')
+</script>
 
 <style lang="scss" scoped>
 h1 {
